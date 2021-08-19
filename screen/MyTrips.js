@@ -1,10 +1,10 @@
 import React from 'react';
 import { Row, StyleText } from '../component/components';
-const Home = () => {
+const MyTrips = () => {
     return(
         <Row h="center" v="center">
-            <StyleText>Home</StyleText>
+            {/* <StyleText>123</StyleText> */}
         </Row>
     )
 }
-export default Home;
+export default MyTrips;
