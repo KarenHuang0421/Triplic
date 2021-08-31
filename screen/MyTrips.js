@@ -15,8 +15,9 @@ const MyTrips = () => {
                     key={key}
                     style={{ width: "100%" }}
                     onPress={() =>
-                        navigation.navigate("TripTimeline", {
-                            name: `CARD ${key + 1}`,
+                        navigation.navigate("TimelineScreen", {
+                            name: `CARD ${key + 1} 行程表`,
+                            page: 0,
                         })
                     }
                 >

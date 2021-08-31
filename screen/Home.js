@@ -1,30 +1,22 @@
 import React from "react";
 // import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native";
-import { Row, StyleText } from "../component/components";
+import { Column, StyleText } from "../component/components";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-const Home = () => {
-    // const navigation = useNavigation();
-    // async function removeValue(key) {
-    //     try {
-    //         await AsyncStorage.removeItem(key);
-    //         navigation.reset({ index: 0, routes: [{ name: "Login" }] });
-    //     } catch (e) {
-    //         // remove error
-    //     }
-    // }
-
+const Home = ({ navigation }) => {
     return (
-        <Row h="center" v="center">
+        <Column h="center" v="center">
             <StyleText>Home</StyleText>
-            {/* <Button
-                title="logout"
+            <Button
+                title="阿里山三天兩日遊"
                 onPress={() => {
-                    removeValue("localKey");
+                    navigation.navigate("TimelineScreen", {
+                        name: `阿里山三天兩日遊`,
+                        page: 1,
+                    });
                 }}
-            /> */}
-        </Row>
+            />
+        </Column>
     );
 };
 export default Home;

@@ -13,7 +13,7 @@ import MyTrips from "./screen/MyTrips";
 import Profile from "./screen/Profile";
 import Loading from "./screen/Loading";
 import Schedule from "./screen/Schedule";
-import TripSchedule from "./screen/TripSchedule";
+import TimelineView from "./screen/TimelineScreen";
 import { Column } from "./component/components";
 
 const Tab = createBottomTabNavigator();
@@ -62,8 +62,8 @@ export default function App() {
                     options={({ route }) => ({ title: route.params.name })}
                 />
                 <Stack.Screen
-                    name="TripTimeline"
-                    component={TripSchedule}
+                    name="TimelineScreen"
+                    component={TimelineView}
                     options={({ route }) => ({ title: route.params.name })}
                 />
                 {/* <Stack.Screen name="Detail" component={Detail} /> */}
