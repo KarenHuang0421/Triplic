@@ -36,7 +36,6 @@ const TimelineScreen = ({ route, navigation }) => {
             title: "Archery Training",
             description:
                 "The Beginner Archery and Beginner Crossbow course does ",
-            lineColor: "#009688",
             imageUrl: imageData,
         },
         {
@@ -55,7 +54,6 @@ const TimelineScreen = ({ route, navigation }) => {
             title: "Watch Soccer",
             description:
                 "Team sport played between two teams of eleven players with a spherical ball. ",
-            lineColor: "#009688",
             imageUrl: imageData,
         },
         {
