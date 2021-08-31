@@ -111,7 +111,7 @@ const TimelineScreen = ({ route, navigation }) => {
 
     // props page: 0 means TripSchedule, 1 means TripLog
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1 }}>
             {renderSelected()}
             {route.params.page == 0 ? (
                 <View style={styles.container}>
@@ -185,7 +185,7 @@ const TimelineScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        paddingLeft: 20,
         backgroundColor: "white",
     },
     contentStyle: {
