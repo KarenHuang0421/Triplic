@@ -33,8 +33,13 @@ const MyTrips = () => {
             <Button
                 title="ADD CARD"
                 containerStyle={{ width: "90%", marginTop: 20 }}
-                onPress={() => setCards(cards.concat({}))}
+                onPress={() => navigation.navigate('Page2-2' , {name: ''})}
             />
+            {/* <Button
+                title="ADD CARD"
+                containerStyle={{ width: "90%", marginTop: 20 }}
+                onPress={() => setCards(cards.concat({}))}
+            /> */}
         </Column>
     );
 };

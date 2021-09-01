@@ -1,30 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
-export default (Indicator = ({
-  itemCount,
-  currentIndex,
-  indicatorStyle,
-  indicatorContainerStyle,
-  indicatorActiveColor,
-  indicatorInActiveColor,
-  indicatorActiveWidth = 6,
-}) => {
-  return (
-    <View style={[styles.container, indicatorContainerStyle]}>
-      {renderIndicator(
-        itemCount,
-        currentIndex,
-        indicatorStyle,
-        indicatorActiveColor,
-        indicatorInActiveColor,
-        indicatorActiveWidth,
-      )}
-    </View>
-  );
-});
-
-export const renderIndicator = (
+const renderIndicator = (
   count,
   currentIndex,
   indicatorStyle,
@@ -60,6 +37,31 @@ export const renderIndicator = (
   }
   return indicators;
 };
+
+const Indicator = ({
+  itemCount,
+  currentIndex,
+  indicatorStyle,
+  indicatorContainerStyle,
+  indicatorActiveColor,
+  indicatorInActiveColor,
+  indicatorActiveWidth = 6,
+}) => {
+  return (
+    <View style={[styles.container, indicatorContainerStyle]}>
+      {renderIndicator(
+        itemCount,
+        currentIndex,
+        indicatorStyle,
+        indicatorActiveColor,
+        indicatorInActiveColor,
+        indicatorActiveWidth,
+      )}
+    </View>
+  );
+};
+
+export default Indicator;
 
 const styles = StyleSheet.create({
   container: {
