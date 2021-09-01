@@ -85,7 +85,7 @@ const TimelineScreen = ({ route, navigation }) => {
                         {rowData.description}
                     </Text>
                     <View>
-                        <FlatListSlider
+                        {/* <FlatListSlider
                             data={rowData.imageUrl}
                             width={175}
                             autoscroll={false}
@@ -93,7 +93,7 @@ const TimelineScreen = ({ route, navigation }) => {
                             onPress={(item) => alert(JSON.stringify(item))}
                             indicatorActiveWidth={40}
                             contentContainerStyle={{ paddingHorizontal: 0 }}
-                        />
+                        /> */}
                     </View>
                 </View>
             );

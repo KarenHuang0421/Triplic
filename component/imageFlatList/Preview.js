@@ -8,7 +8,7 @@ import {
     Platform,
 } from "react-native";
 
-export default Preview = ({
+const Preview = ({
     style,
     item,
     imageKey,
@@ -32,6 +32,8 @@ export default Preview = ({
         </TouchableOpacity>
     );
 };
+
+export default Preview;
 
 const styles = StyleSheet.create({
     videoContainer: {

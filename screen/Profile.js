@@ -1,8 +1,9 @@
 import React from "react";
 import { Column, Row, StyleText } from "../component/components";
-import { Avatar, Button, Text } from "react-native-elements";
+import { Avatar, Button } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Text } from "react-native";
 
 const Profile = () => {
     const navigation = useNavigation();
@@ -34,7 +35,7 @@ const Profile = () => {
             >
                 <Button
                     containerStyle={{ width: "100%" }}
-                    title="登入"
+                    title="登出"
                     onPress={() => {
                         removeValue("localKey");
                     }}
