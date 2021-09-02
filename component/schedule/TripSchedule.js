@@ -35,7 +35,10 @@ export default class TripSchedule extends React.Component {
         for (var x = 1; x <= this.props.size; x++) {
             flatListData.push({
                 id: String(x),
-                title: "Day" + String(x),
+                day: "Day" + String(x),
+                date: moment(this.props.startDate, "YYYY/MM/DD")
+                    .add(x - 1, "days")
+                    .format("MM/DD"),
             });
         }
 
@@ -75,10 +78,6 @@ export default class TripSchedule extends React.Component {
         }
     }
 
-    static defaultProps = {
-        initDate: 1,
-    };
-
     _getItemLayout(data, index) {
         const { width } = this.props;
         return { length: width, offset: width * index, index };
@@ -105,16 +104,11 @@ export default class TripSchedule extends React.Component {
         const {
             width,
             format24h,
-            initDay,
             scrollToFirst = true,
             start = 0,
             end = 24,
-            formatHeader,
-            upperCaseHeader = false,
         } = this.props;
 
-        // let headerText = "Day" + String(initDay + index);
-        // console.log(index);
         return (
             <View style={[this.styles.container, { width }]}>
                 <DayView
@@ -168,8 +162,9 @@ export default class TripSchedule extends React.Component {
                 onPress={onPress}
                 style={[styles.flatListItem, backgroundColor]}
             >
-                <Text style={[styles.flatListTitle, textColor]}>
-                    {item.title}
+                <Text style={[styles.flatListText, textColor]}>{item.day}</Text>
+                <Text style={[styles.flatListText, textColor]}>
+                    {item.date}
                 </Text>
             </TouchableOpacity>
         );
@@ -187,7 +182,12 @@ export default class TripSchedule extends React.Component {
         return (
             <View style={[this.styles.container, { width: this.props.width }]}>
                 <View
-                    style={{ height: 70, marginTop: 20, flexDirection: "row" }}
+                    style={{
+                        height: 70,
+                        marginTop: 20,
+                        flexDirection: "row",
+                        alignItems: "center",
+                    }}
                 >
                     <FlatList
                         data={this.state.flatListData}
@@ -201,7 +201,7 @@ export default class TripSchedule extends React.Component {
                     <Button
                         title={"add day"}
                         onPress={() => {
-                            // call App.js addOneDay function to set the day count of events
+                            // call Schedule.js addOneDay function to set the day count of events
                             this.props.addOneDay();
                         }}
                     />
@@ -235,8 +235,10 @@ const styles = StyleSheet.create({
         padding: 5,
         marginVertical: 8,
         marginHorizontal: 16,
+        borderRadius: 15,
+        alignItems: "center",
     },
-    flatListTitle: {
-        fontSize: 32,
+    flatListText: {
+        fontSize: 16,
     },
 });

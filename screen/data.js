@@ -1,4 +1,5 @@
 const getEvent = {
+    tripStartDate: "2021/09/02",
     dayCount: 2,
     events: [
         {
@@ -33,6 +34,4 @@ const getEvent = {
     ],
 };
 
-export {
-    getEvent
-}
+export { getEvent };
