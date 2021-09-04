@@ -70,8 +70,8 @@ const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
     );
 };
 
-const Schedule = () => {
-    const [page, setPage] = useState(0);
+const Schedule = ({ route }) => {
+    const [page, setPage] = useState(route.params.page);
     const [events, setEvents] = useState(getEvent);
 
     function addEvent(addEvent) {

@@ -33,7 +33,9 @@ const MyTrips = () => {
             <Button
                 title="ADD CARD"
                 containerStyle={{ width: "90%", marginTop: 20 }}
-                onPress={() => navigation.navigate('Page2-2' , {name: ''})}
+                onPress={() =>
+                    navigation.navigate("Page2-2", { name: "", page: 0 })
+                }
             />
             {/* <Button
                 title="ADD CARD"

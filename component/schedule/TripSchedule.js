@@ -45,6 +45,7 @@ export default class TripSchedule extends React.Component {
         this.state = {
             index: 0,
             lastDayCount: this.props.size,
+            startDate: this.props.startDate,
             flatListData: flatListData,
         };
     }
@@ -55,7 +56,9 @@ export default class TripSchedule extends React.Component {
         }
     }
 
+    // props change
     static getDerivedStateFromProps(nextProps, prevState) {
+        // if the total day count change
         if (nextProps.size !== prevState.lastDayCount) {
             return {
                 ...prevState,
@@ -64,9 +67,31 @@ export default class TripSchedule extends React.Component {
                     ...prevState.flatListData,
                     {
                         id: String(nextProps.size),
-                        title: "Day" + String(nextProps.size),
+                        day: "Day" + String(nextProps.size),
+                        date: moment(prevState.startDate, "YYYY/MM/DD")
+                            .add(nextProps.size - 1, "days")
+                            .format("MM/DD"),
                     },
                 ],
+            };
+        }
+        // if the start date change
+        // warning!! this unit has not been test!!
+        if (nextProps.startDate !== prevState.startDate) {
+            var newflatListData = [];
+            for (var x = 1; x <= this.props.size; x++) {
+                newflatListData.push({
+                    id: String(x),
+                    day: "Day" + String(x),
+                    date: moment(nextProps.startDate, "YYYY/MM/DD")
+                        .add(x - 1, "days")
+                        .format("MM/DD"),
+                });
+            }
+            return {
+                ...prevState,
+                startDate: nextProps.startDate,
+                flatListData: newflatListData,
             };
         }
         return null;
