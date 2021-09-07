@@ -8,12 +8,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 //router
 import Login from "./screen/Login";
+import Loading from "./screen/Loading";
 import Home from "./screen/Home";
 import MyTrips from "./screen/MyTrips";
 import Profile from "./screen/Profile";
-import Loading from "./screen/Loading";
-import Schedule from "./screen/Schedule";
 import TimelineView from "./screen/TimelineScreen";
+import PlacesGroup from "./screen/PlacesGroup";
+import Place from "./screen/Place";
+import Schedule from "./screen/Schedule";
 import { Column } from "./component/components";
 
 const Tab = createBottomTabNavigator();
@@ -57,16 +59,25 @@ export default function App() {
                     })}
                 />
                 <Stack.Screen
-                    name="Page2-2"
-                    component={Schedule}
-                    options={({ route }) => ({ title: route.params.name })}
-                />
-                <Stack.Screen
                     name="TimelineScreen"
                     component={TimelineView}
                     options={({ route }) => ({ title: route.params.name })}
                 />
-                {/* <Stack.Screen name="Detail" component={Detail} /> */}
+                <Stack.Screen
+                    name="PlacesGroup"
+                    component={PlacesGroup}
+                    options={({ route }) => ({ title: route.params.name })}
+                />
+                <Stack.Screen
+                    name="Place"
+                    component={Place}
+                    options={({ route }) => ({ title: route.params.name })}
+                />
+                <Stack.Screen
+                    name="Schedule"
+                    component={Schedule}
+                    options={({ route }) => ({ title: route.params.name })}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

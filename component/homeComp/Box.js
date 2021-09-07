@@ -5,9 +5,11 @@ import { Card as RNCard } from "react-native-elements";
 
 const Box = ({ data, onPress }) => {
     return(
-        <RNCard wrapperStyle={styles.box}>
-            <StyleText>{data.title}</StyleText>
-        </RNCard>
+        <TouchableOpacity onPress={onPress}>
+            <RNCard wrapperStyle={styles.box}>
+                <StyleText>{data.title}</StyleText>
+            </RNCard>
+        </TouchableOpacity>
     )
 }
 export default Box;

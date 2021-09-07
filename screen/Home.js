@@ -66,7 +66,12 @@ const Home = ({ navigation }) => {
                     style={{marginLeft: -15}}
                     data={category} 
                     horizontal={true}
-                    renderItem={({item}) => <Box data={item} onPress={() => null} />} 
+                    renderItem={({item}) => 
+                        <Box data={item} onPress={() => 
+                            navigation.navigate("PlacesGroup", {
+                                name: item.name
+                            })
+                        } />} 
                     keyExtractor={item => item.id.toString()} />
                 <Row style={{height: 300}}/>
             </ScrollView>

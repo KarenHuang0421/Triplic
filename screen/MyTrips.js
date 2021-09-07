@@ -34,7 +34,7 @@ const MyTrips = () => {
                 title="ADD CARD"
                 containerStyle={{ width: "90%", marginTop: 20 }}
                 onPress={() =>
-                    navigation.navigate("Page2-2", { name: "", page: 0 })
+                    navigation.navigate("Schedule", { name: "", page: 0 })
                 }
             />
             {/* <Button
