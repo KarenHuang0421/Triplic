@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    FlatList,
+    Button,
+} from "react-native";
 
 import Timeline from "react-native-timeline-flatlist";
 import Preview from "../component/imageFlatList/Preview";
 import FlatListSlider from "../component/imageFlatList/FlatListSlider";
 import ChildItem from "../component/imageFlatList/ChildItem";
+import moment from "moment";
+import DaySelector from "../component/DaySelector";
 
 const TimelineScreen = ({ route, navigation }) => {
     const imageData = [
@@ -30,39 +40,63 @@ const TimelineScreen = ({ route, navigation }) => {
         },
     ];
 
-    const data = [
-        {
-            time: "09:00",
-            title: "Archery Training",
-            description:
-                "The Beginner Archery and Beginner Crossbow course does ",
-            imageUrl: imageData,
-        },
-        {
-            time: "10:45",
-            title: "Play Badminton",
-            description:
-                "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
-            imageUrl: imageData,
-        },
-        {
-            time: "12:00",
-            title: "Lunch",
-        },
-        {
-            time: "14:00",
-            title: "Watch Soccer",
-            description:
-                "Team sport played between two teams of eleven players with a spherical ball. ",
-            imageUrl: imageData,
-        },
-        {
-            time: "16:30",
-            title: "Go to Fitness center",
-            description:
-                "Look out for the Best Gym & Fitness Centers around me :)",
-        },
-    ];
+    const [data, setData] = useState({
+        dayCount: 3,
+        startDate: "2021/09/06",
+        data: [
+            {
+                day: 1,
+                time: "09:00",
+                title: "Archery Training",
+                description:
+                    "The Beginner Archery and Beginner Crossbow course does ",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                time: "10:45",
+                title: "Play Badminton",
+                description:
+                    "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                time: "12:00",
+                title: "Lunch",
+            },
+            {
+                day: 1,
+                time: "14:00",
+                title: "Watch Soccer",
+                description:
+                    "Team sport played between two teams of eleven players with a spherical ball. ",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                time: "16:30",
+                title: "Go to Fitness center",
+                description:
+                    "Look out for the Best Gym & Fitness Centers around me :)",
+            },
+        ],
+    });
+
+    const daySelectorOnPress = (id) => {
+        setShowData(dataFilter(data.data, id));
+    };
+
+    function dataFilter(data, day) {
+        var result = data.filter((obj) => {
+            return obj.day == day;
+        });
+
+        return result.sort((a, b) => (a.time > b.time ? 1 : -1));
+    }
+
+    const [showData, setShowData] = useState(dataFilter(data.data, 1));
+    // console.log(showData);
 
     const [selected, setSelected] = useState(null);
 
@@ -125,9 +159,14 @@ const TimelineScreen = ({ route, navigation }) => {
                     >
                         <Text>編輯</Text>
                     </TouchableOpacity>
+                    <DaySelector
+                        dayCount={data.dayCount}
+                        onPress={daySelectorOnPress}
+                        startDate={data.startDate}
+                    />
                     <Timeline
                         style={styles.list}
-                        data={data}
+                        data={showData}
                         circleSize={30}
                         dotSize={14}
                         circleColor="rgb(45,156,219)"
@@ -152,9 +191,14 @@ const TimelineScreen = ({ route, navigation }) => {
                 <View style={styles.container}>
                     {/* TripLog head banner... or something */}
                     <Text>TripLog head banner</Text>
+                    <DaySelector
+                        dayCount={data.dayCount}
+                        onPress={daySelectorOnPress}
+                        startDate={data.startDate}
+                    />
                     <Timeline
                         style={styles.list}
-                        data={data}
+                        data={showData}
                         circleSize={30}
                         dotSize={14}
                         circleColor="rgb(45,156,219)"
