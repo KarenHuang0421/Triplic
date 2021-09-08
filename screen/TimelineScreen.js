@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     Text,
@@ -43,48 +43,50 @@ const TimelineScreen = ({ route, navigation }) => {
     const [data, setData] = useState({
         dayCount: 3,
         startDate: "2021/09/06",
-        data: [
+        events: [
             {
                 day: 1,
-                time: "09:00",
+                start: "09:00",
+                end: "10:00",
                 title: "Archery Training",
-                description:
-                    "The Beginner Archery and Beginner Crossbow course does ",
+                notes: "The Beginner Archery and Beginner Crossbow course does ",
                 imageUrl: imageData,
             },
             {
                 day: 1,
-                time: "10:45",
+                start: "10:45",
+                end: "12:00",
                 title: "Play Badminton",
-                description:
-                    "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
+                notes: "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
                 imageUrl: imageData,
             },
             {
                 day: 1,
-                time: "12:00",
+                start: "12:00",
+                end: "13:00",
                 title: "Lunch",
             },
             {
                 day: 1,
-                time: "14:00",
+                start: "14:00",
+                end: "15:00",
                 title: "Watch Soccer",
-                description:
-                    "Team sport played between two teams of eleven players with a spherical ball. ",
+                notes: "Team sport played between two teams of eleven players with a spherical ball. ",
                 imageUrl: imageData,
             },
             {
                 day: 1,
-                time: "16:30",
+                start: "16:30",
+                end: "17:00",
                 title: "Go to Fitness center",
-                description:
-                    "Look out for the Best Gym & Fitness Centers around me :)",
+                notes: "Look out for the Best Gym & Fitness Centers around me :)",
             },
         ],
     });
 
+    // select day
     const daySelectorOnPress = (id) => {
-        setShowData(dataFilter(data.data, id));
+        setShowData(dataFilter(data.events, id));
     };
 
     function dataFilter(data, day) {
@@ -92,11 +94,23 @@ const TimelineScreen = ({ route, navigation }) => {
             return obj.day == day;
         });
 
-        return result.sort((a, b) => (a.time > b.time ? 1 : -1));
+        return result.sort((a, b) => (a.start > b.start ? 1 : -1));
     }
+    const [showData, setShowData] = useState(dataFilter(data.events, 1));
 
-    const [showData, setShowData] = useState(dataFilter(data.data, 1));
-    // console.log(showData);
+    // if any change in schedule
+    useEffect(() => {
+        if (route.params?.data) {
+            let sortedData = {
+                ...route.params.data,
+                events: route.params.data.events.sort((a, b) =>
+                    a.start > b.start ? 1 : -1
+                ),
+            };
+            setData(sortedData);
+            setShowData(dataFilter(sortedData.events, 1));
+        }
+    }, [route.params?.data]);
 
     const [selected, setSelected] = useState(null);
 
@@ -109,15 +123,39 @@ const TimelineScreen = ({ route, navigation }) => {
             alert(`Selected event: ${selected.title} at ${selected.time}`);
     };
 
+    const renderTime = (rowData, sectionID, rowID) => {
+        return (
+            <View style={{ alignItems: "flex-end" }}>
+                <View
+                    style={{
+                        minWidth: 52,
+                        marginTop: -5,
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            backgroundColor: "#ff9797",
+                            color: "white",
+                            padding: 5,
+                            borderRadius: 15,
+                            overflow: "hidden",
+                        }}
+                    >
+                        {rowData.start}
+                    </Text>
+                </View>
+            </View>
+        );
+    };
+
     const renderDetail = (rowData, sectionID, rowID) => {
         let title = <Text style={[styles.title]}>{rowData.title}</Text>;
         var desc = null;
-        if (rowData.description && rowData.imageUrl) {
-            desc = (
-                <View style={styles.descriptionContainer}>
-                    <Text style={[styles.textDescription]}>
-                        {rowData.description}
-                    </Text>
+        desc = (
+            <View style={styles.descriptionContainer}>
+                <Text style={[styles.textDescription]}>{rowData.notes}</Text>
+                {!!route.params.page && (
                     <View>
                         <FlatListSlider
                             data={rowData.imageUrl}
@@ -129,9 +167,9 @@ const TimelineScreen = ({ route, navigation }) => {
                             contentContainerStyle={{ paddingHorizontal: 0 }}
                         />
                     </View>
-                </View>
-            );
-        }
+                )}
+            </View>
+        );
 
         return (
             <View style={{ flex: 1 }}>
@@ -145,8 +183,8 @@ const TimelineScreen = ({ route, navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             {renderSelected()}
-            {route.params.page == 0 ? (
-                <View style={styles.container}>
+            <View style={styles.container}>
+                {route.params.page == 0 ? (
                     <TouchableOpacity
                         style={{ alignSelf: "flex-end" }}
                         // navigate to scheduler
@@ -154,73 +192,45 @@ const TimelineScreen = ({ route, navigation }) => {
                             navigation.navigate("Page2-2", {
                                 name: `編輯 ${route.params.name}`,
                                 page: 1,
+                                data: data,
                             });
                         }}
                     >
                         <Text>編輯</Text>
                     </TouchableOpacity>
-                    <DaySelector
-                        dayCount={data.dayCount}
-                        onPress={daySelectorOnPress}
-                        startDate={data.startDate}
-                    />
-                    <Timeline
-                        style={styles.list}
-                        data={showData}
-                        circleSize={30}
-                        dotSize={14}
-                        circleColor="rgb(45,156,219)"
-                        lineColor="rgb(45,156,219)"
-                        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-                        timeStyle={{
-                            textAlign: "center",
-                            backgroundColor: "#ff9797",
-                            color: "white",
-                            padding: 5,
-                            borderRadius: 13,
-                        }}
-                        descriptionStyle={{ color: "gray" }}
-                        options={{
-                            style: { paddingTop: 5 },
-                        }}
-                        innerCircle={"dot"}
-                        onEventPress={onEventPress}
-                    />
-                </View>
-            ) : (
-                <View style={styles.container}>
-                    {/* TripLog head banner... or something */}
-                    <Text>TripLog head banner</Text>
-                    <DaySelector
-                        dayCount={data.dayCount}
-                        onPress={daySelectorOnPress}
-                        startDate={data.startDate}
-                    />
-                    <Timeline
-                        style={styles.list}
-                        data={showData}
-                        circleSize={30}
-                        dotSize={14}
-                        circleColor="rgb(45,156,219)"
-                        lineColor="rgb(45,156,219)"
-                        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-                        timeStyle={{
-                            textAlign: "center",
-                            backgroundColor: "#ff9797",
-                            color: "white",
-                            padding: 5,
-                            borderRadius: 13,
-                        }}
-                        descriptionStyle={{ color: "gray" }}
-                        options={{
-                            style: { paddingTop: 5 },
-                        }}
-                        innerCircle={"dot"}
-                        onEventPress={onEventPress}
-                        renderDetail={renderDetail}
-                    />
-                </View>
-            )}
+                ) : (
+                    <Text>Trip Log head banner</Text>
+                )}
+                <DaySelector
+                    dayCount={data.dayCount}
+                    onPress={daySelectorOnPress}
+                    startDate={data.startDate}
+                />
+                <Timeline
+                    style={styles.list}
+                    data={showData}
+                    circleSize={30}
+                    dotSize={14}
+                    circleColor="rgb(45,156,219)"
+                    lineColor="rgb(45,156,219)"
+                    timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+                    timeStyle={{
+                        textAlign: "center",
+                        backgroundColor: "#ff9797",
+                        color: "white",
+                        padding: 5,
+                        borderRadius: 13,
+                    }}
+                    descriptionStyle={{ color: "gray" }}
+                    options={{
+                        style: { paddingTop: 5 },
+                    }}
+                    innerCircle={"dot"}
+                    onEventPress={onEventPress}
+                    renderTime={renderTime}
+                    renderDetail={renderDetail}
+                />
+            </View>
         </View>
     );
 };

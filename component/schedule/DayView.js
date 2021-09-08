@@ -196,7 +196,7 @@ export default class DayView extends React.PureComponent {
                                     numberOfLines={numberOfLines - 1}
                                     style={[styles.eventSummary]}
                                 >
-                                    {event.summary || " "}
+                                    {event.notes || " "}
                                 </Text>
                             ) : null}
                             {numberOfLines > 2 ? (
