@@ -29,7 +29,14 @@ const FillInfo = ({ onClick }) => {
     );
 };
 
-const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
+const Arrange = ({
+    events,
+    addEvent,
+    addOneDay,
+    isEquivalent,
+    initDay,
+    lastSelectedDay,
+}) => {
     let { width } = Dimensions.get("window");
 
     function eventTapped(event) {
@@ -51,6 +58,8 @@ const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
                 lineHeight={100}
                 addOneDay={addOneDay}
                 startDate={events.startDate}
+                initDay={initDay}
+                lastSelectedDay={lastSelectedDay}
             />
             <Button
                 title={"add event"}
@@ -73,6 +82,7 @@ const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
 const Schedule = ({ route, navigation }) => {
     const [page, setPage] = useState(route.params.page);
     const [data, setData] = useState(route.params.data);
+    const [selectedDay, setSelectedDay] = useState(route.params.initDay);
 
     function addEvent(addEvent) {
         var newEventArray = [...data.events];
@@ -143,6 +153,10 @@ const Schedule = ({ route, navigation }) => {
                             });
                         }}
                         isEquivalent={(event, i) => isEquivalent(event, i)}
+                        initDay={route.params.initDay}
+                        lastSelectedDay={(id) => {
+                            setSelectedDay(id);
+                        }}
                     />
 
                     <Button
@@ -152,6 +166,7 @@ const Schedule = ({ route, navigation }) => {
                                 name: `${route.params.name.substring(2)}`,
                                 page: 0,
                                 data: data,
+                                initDay: selectedDay,
                             })
                         }
                     />

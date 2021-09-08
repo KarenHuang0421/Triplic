@@ -84,21 +84,25 @@ const TimelineScreen = ({ route, navigation }) => {
         ],
     });
 
-    // select day
-    const daySelectorOnPress = (id) => {
-        setShowData(dataFilter(data.events, id));
-    };
-
+    // filter data by select day
     function dataFilter(data, day) {
         var result = data.filter((obj) => {
             return obj.day == day;
         });
+        // console.log(result);
+        // console.log(day);
 
         return result.sort((a, b) => (a.start > b.start ? 1 : -1));
     }
+
+    const [selectedDay, setSelectedDay] = useState(1);
     const [showData, setShowData] = useState(dataFilter(data.events, 1));
 
-    // if any change in schedule
+    const daySelectorOnPress = (id) => {
+        setSelectedDay(id);
+        setShowData(dataFilter(data.events, id));
+    };
+    // back from schedule page
     useEffect(() => {
         if (route.params?.data) {
             let sortedData = {
@@ -108,10 +112,12 @@ const TimelineScreen = ({ route, navigation }) => {
                 ),
             };
             setData(sortedData);
-            setShowData(dataFilter(sortedData.events, 1));
+            setShowData(dataFilter(sortedData.events, route.params.initDay));
+            setSelectedDay(route.params.initDay);
         }
     }, [route.params?.data]);
 
+    // handle timeline onPress event
     const [selected, setSelected] = useState(null);
 
     const onEventPress = (data) => {
@@ -155,6 +161,7 @@ const TimelineScreen = ({ route, navigation }) => {
         desc = (
             <View style={styles.descriptionContainer}>
                 <Text style={[styles.textDescription]}>{rowData.notes}</Text>
+                {/* if page == 1, then have image */}
                 {!!route.params.page && (
                     <View>
                         <FlatListSlider
@@ -187,12 +194,13 @@ const TimelineScreen = ({ route, navigation }) => {
                 {route.params.page == 0 ? (
                     <TouchableOpacity
                         style={{ alignSelf: "flex-end" }}
-                        // navigate to scheduler
+                        //  let the selected day same by passing selectedDay state to schedule.js
                         onPress={() => {
                             navigation.navigate("Page2-2", {
                                 name: `編輯 ${route.params.name}`,
                                 page: 1,
                                 data: data,
+                                initDay: selectedDay,
                             });
                         }}
                     >
@@ -205,31 +213,39 @@ const TimelineScreen = ({ route, navigation }) => {
                     dayCount={data.dayCount}
                     onPress={daySelectorOnPress}
                     startDate={data.startDate}
+                    setDay={route.params.initDay}
                 />
-                <Timeline
-                    style={styles.list}
-                    data={showData}
-                    circleSize={30}
-                    dotSize={14}
-                    circleColor="rgb(45,156,219)"
-                    lineColor="rgb(45,156,219)"
-                    timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-                    timeStyle={{
-                        textAlign: "center",
-                        backgroundColor: "#ff9797",
-                        color: "white",
-                        padding: 5,
-                        borderRadius: 13,
-                    }}
-                    descriptionStyle={{ color: "gray" }}
-                    options={{
-                        style: { paddingTop: 5 },
-                    }}
-                    innerCircle={"dot"}
-                    onEventPress={onEventPress}
-                    renderTime={renderTime}
-                    renderDetail={renderDetail}
-                />
+                {/* if selected day has data  */}
+                {showData.length !== 0 ? (
+                    <Timeline
+                        style={styles.list}
+                        data={showData}
+                        circleSize={30}
+                        dotSize={14}
+                        circleColor="rgb(45,156,219)"
+                        lineColor="rgb(45,156,219)"
+                        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+                        timeStyle={{
+                            textAlign: "center",
+                            backgroundColor: "#ff9797",
+                            color: "white",
+                            padding: 5,
+                            borderRadius: 13,
+                        }}
+                        descriptionStyle={{ color: "gray" }}
+                        options={{
+                            style: { paddingTop: 5 },
+                        }}
+                        innerCircle={"dot"}
+                        onEventPress={onEventPress}
+                        renderTime={renderTime}
+                        renderDetail={renderDetail}
+                    />
+                ) : (
+                    <View style={{ alignSelf: "center" }}>
+                        <Text>add some schedule!!</Text>
+                    </View>
+                )}
             </View>
         </View>
     );

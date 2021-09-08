@@ -44,7 +44,7 @@ export default class TripSchedule extends React.Component {
         // }
 
         this.state = {
-            index: 0,
+            index: this.props.initDay - 1,
             lastDayCount: this.props.size,
             startDate: this.props.startDate,
             // flatListData: flatListData,
@@ -97,6 +97,10 @@ export default class TripSchedule extends React.Component {
         }
         return null;
     }
+
+    static defaultProps = {
+        initDay: 1,
+    };
 
     componentWillUnmount() {
         if (this.props.onRef) {
@@ -234,12 +238,14 @@ export default class TripSchedule extends React.Component {
                 <DaySelector
                     dayCount={this.state.lastDayCount}
                     onPress={(id) => {
+                        this.props.lastSelectedDay(id);
                         this._goToDay(id);
                     }}
                     startDate={this.state.startDate}
                     addDay={() => {
                         this.props.addOneDay();
                     }}
+                    initDay={this.state.index + 1}
                 />
                 <VirtualizedList
                     ref={(ref) => {
@@ -247,7 +253,7 @@ export default class TripSchedule extends React.Component {
                     }}
                     windowSize={2}
                     initialNumToRender={2}
-                    initialScrollIndex={0}
+                    initialScrollIndex={this.state.index}
                     data={this.props.events}
                     getItemCount={() => this.props.size}
                     getItem={this._getItem.bind(this)}

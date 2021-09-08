@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     TouchableOpacity,
@@ -9,7 +9,14 @@ import {
 } from "react-native";
 import moment from "moment";
 
-const DaySelector = ({ dayCount, onPress, startDate, addDay = false }) => {
+const DaySelector = ({
+    dayCount,
+    onPress,
+    startDate,
+    addDay = false,
+    initDay = 1,
+    setDay,
+}) => {
     var flatListData = [];
     for (var x = 1; x <= dayCount; x++) {
         flatListData.push({
@@ -21,7 +28,14 @@ const DaySelector = ({ dayCount, onPress, startDate, addDay = false }) => {
         });
     }
 
-    const [selectedDay, setSelectedDay] = useState(1);
+    // initial day for first time
+    const [selectedDay, setSelectedDay] = useState(initDay);
+    // when setDay params changes, set selected day to that params
+    useEffect(() => {
+        if (setDay) {
+            setSelectedDay(setDay);
+        }
+    }, [setDay]);
     const _renderFlatListItem = ({ item }) => {
         // clicked item: first color, unclicked item: second color
         const backgroundColor =
@@ -49,8 +63,10 @@ const DaySelector = ({ dayCount, onPress, startDate, addDay = false }) => {
             <FlatListItem
                 item={item}
                 onPress={() => {
-                    setSelectedDay(item.id);
-                    onPress(item.id);
+                    if (item.id !== selectedDay) {
+                        setSelectedDay(item.id);
+                        onPress(item.id);
+                    }
                 }}
                 backgroundColor={{ backgroundColor }}
                 textColor={{ color }}
