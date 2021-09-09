@@ -29,7 +29,14 @@ const FillInfo = ({ onClick }) => {
     );
 };
 
-const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
+const Arrange = ({
+    events,
+    addEvent,
+    addOneDay,
+    isEquivalent,
+    initDay,
+    lastSelectedDay,
+}) => {
     let { width } = Dimensions.get("window");
 
     function eventTapped(event) {
@@ -50,39 +57,59 @@ const Arrange = ({ events, addEvent, addOneDay, isEquivalent }) => {
                 size={events.dayCount}
                 lineHeight={100}
                 addOneDay={addOneDay}
-                startDate={events.tripStartDate}
+                startDate={events.startDate}
+                initDay={initDay}
+                lastSelectedDay={lastSelectedDay}
             />
-            {/* <Button
-                title={"Click"}
+            <Button
+                title={"add event"}
                 onPress={() =>
                     addEvent({
                         day: 1,
-                        start: "08:30:00",
-                        end: "09:20:00",
+                        start: "08:30",
+                        end: "09:00",
                         title: "Dr. Mariana Joseph",
-                        summary: "3412 Piedmont Rd NE, GA 3032",
+                        notes: "3412 Piedmont Rd NE, GA 3032",
                     })
                 }
-            /> */}
+            />
         </View>
 
         // </Column>
     );
 };
 
-const Schedule = ({ route }) => {
+const Schedule = ({ route, navigation }) => {
     const [page, setPage] = useState(route.params.page);
-    const [events, setEvents] = useState(getEvent);
+    const [data, setData] = useState(route.params.data);
+    const [selectedDay, setSelectedDay] = useState(route.params.initDay);
 
     function addEvent(addEvent) {
-        var newEventArray = [...events.events];
+        var newEventArray = [...data.events];
         newEventArray.push(addEvent);
         let newEvent = {
-            ...events,
+            ...data,
             events: newEventArray,
         };
-        setEvents(newEvent);
+        setData(newEvent);
     }
+    // React.useLayoutEffect(() => {
+    //     navigation.setOptions({
+    //         headerRight: () => (
+    //             <Button
+    //                 onPress={() => {
+    //                     console.log(data.dayCount);
+    //                     navigation.navigate("TimelineScreen", {
+    //                         name: `${route.params.name.substring(2)}`,
+    //                         page: 0,
+    //                         data: data,
+    //                     });
+    //                 }}
+    //                 title="Save"
+    //             />
+    //         ),
+    //     });
+    // }, [navigation]);
 
     function isEquivalent(a, b) {
         // Create arrays of property names
@@ -115,17 +142,35 @@ const Schedule = ({ route }) => {
             {page == 0 ? (
                 <FillInfo onClick={() => setPage(1)} />
             ) : (
-                <Arrange
-                    events={events}
-                    addEvent={addEvent}
-                    addOneDay={() => {
-                        setEvents({
-                            ...events,
-                            dayCount: events.dayCount + 1,
-                        });
-                    }}
-                    isEquivalent={(event, i) => isEquivalent(event, i)}
-                />
+                <Column>
+                    <Arrange
+                        events={data}
+                        addEvent={addEvent}
+                        addOneDay={() => {
+                            setData({
+                                ...data,
+                                dayCount: data.dayCount + 1,
+                            });
+                        }}
+                        isEquivalent={(event, i) => isEquivalent(event, i)}
+                        initDay={route.params.initDay}
+                        lastSelectedDay={(id) => {
+                            setSelectedDay(id);
+                        }}
+                    />
+
+                    <Button
+                        title={"Save"}
+                        onPress={() =>
+                            navigation.navigate("TimelineScreen", {
+                                name: `${route.params.name.substring(2)}`,
+                                page: 0,
+                                data: data,
+                                initDay: selectedDay,
+                            })
+                        }
+                    />
+                </Column>
             )}
         </Column>
     );

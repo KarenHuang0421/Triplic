@@ -1,10 +1,20 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    FlatList,
+    Button,
+} from "react-native";
 
 import Timeline from "react-native-timeline-flatlist";
 import Preview from "../component/imageFlatList/Preview";
 import FlatListSlider from "../component/imageFlatList/FlatListSlider";
 import ChildItem from "../component/imageFlatList/ChildItem";
+import moment from "moment";
+import DaySelector from "../component/DaySelector";
 
 const TimelineScreen = ({ route, navigation }) => {
     const imageData = [
@@ -30,40 +40,84 @@ const TimelineScreen = ({ route, navigation }) => {
         },
     ];
 
-    const data = [
-        {
-            time: "09:00",
-            title: "Archery Training",
-            description:
-                "The Beginner Archery and Beginner Crossbow course does ",
-            imageUrl: imageData,
-        },
-        {
-            time: "10:45",
-            title: "Play Badminton",
-            description:
-                "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
-            imageUrl: imageData,
-        },
-        {
-            time: "12:00",
-            title: "Lunch",
-        },
-        {
-            time: "14:00",
-            title: "Watch Soccer",
-            description:
-                "Team sport played between two teams of eleven players with a spherical ball. ",
-            imageUrl: imageData,
-        },
-        {
-            time: "16:30",
-            title: "Go to Fitness center",
-            description:
-                "Look out for the Best Gym & Fitness Centers around me :)",
-        },
-    ];
+    const [data, setData] = useState({
+        dayCount: 3,
+        startDate: "2021/09/06",
+        events: [
+            {
+                day: 1,
+                start: "09:00",
+                end: "10:00",
+                title: "Archery Training",
+                notes: "The Beginner Archery and Beginner Crossbow course does ",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                start: "10:45",
+                end: "12:00",
+                title: "Play Badminton",
+                notes: "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                start: "12:00",
+                end: "13:00",
+                title: "Lunch",
+            },
+            {
+                day: 1,
+                start: "14:00",
+                end: "15:00",
+                title: "Watch Soccer",
+                notes: "Team sport played between two teams of eleven players with a spherical ball. ",
+                imageUrl: imageData,
+            },
+            {
+                day: 1,
+                start: "16:30",
+                end: "17:00",
+                title: "Go to Fitness center",
+                notes: "Look out for the Best Gym & Fitness Centers around me :)",
+            },
+        ],
+    });
 
+    // filter data by select day
+    function dataFilter(data, day) {
+        var result = data.filter((obj) => {
+            return obj.day == day;
+        });
+        // console.log(result);
+        // console.log(day);
+
+        return result.sort((a, b) => (a.start > b.start ? 1 : -1));
+    }
+
+    const [selectedDay, setSelectedDay] = useState(1);
+    const [showData, setShowData] = useState(dataFilter(data.events, 1));
+
+    const daySelectorOnPress = (id) => {
+        setSelectedDay(id);
+        setShowData(dataFilter(data.events, id));
+    };
+    // back from schedule page
+    useEffect(() => {
+        if (route.params?.data) {
+            let sortedData = {
+                ...route.params.data,
+                events: route.params.data.events.sort((a, b) =>
+                    a.start > b.start ? 1 : -1
+                ),
+            };
+            setData(sortedData);
+            setShowData(dataFilter(sortedData.events, route.params.initDay));
+            setSelectedDay(route.params.initDay);
+        }
+    }, [route.params?.data]);
+
+    // handle timeline onPress event
     const [selected, setSelected] = useState(null);
 
     const onEventPress = (data) => {
@@ -75,15 +129,40 @@ const TimelineScreen = ({ route, navigation }) => {
             alert(`Selected event: ${selected.title} at ${selected.time}`);
     };
 
+    const renderTime = (rowData, sectionID, rowID) => {
+        return (
+            <View style={{ alignItems: "flex-end" }}>
+                <View
+                    style={{
+                        minWidth: 52,
+                        marginTop: -5,
+                    }}
+                >
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            backgroundColor: "#ff9797",
+                            color: "white",
+                            padding: 5,
+                            borderRadius: 15,
+                            overflow: "hidden",
+                        }}
+                    >
+                        {rowData.start}
+                    </Text>
+                </View>
+            </View>
+        );
+    };
+
     const renderDetail = (rowData, sectionID, rowID) => {
         let title = <Text style={[styles.title]}>{rowData.title}</Text>;
         var desc = null;
-        if (rowData.description && rowData.imageUrl) {
-            desc = (
-                <View style={styles.descriptionContainer}>
-                    <Text style={[styles.textDescription]}>
-                        {rowData.description}
-                    </Text>
+        desc = (
+            <View style={styles.descriptionContainer}>
+                <Text style={[styles.textDescription]}>{rowData.notes}</Text>
+                {/* if page == 1, then have image */}
+                {!!route.params.page && (
                     <View>
                         <FlatListSlider
                             data={rowData.imageUrl}
@@ -95,9 +174,9 @@ const TimelineScreen = ({ route, navigation }) => {
                             contentContainerStyle={{ paddingHorizontal: 0 }}
                         />
                     </View>
-                </View>
-            );
-        }
+                )}
+            </View>
+        );
 
         return (
             <View style={{ flex: 1 }}>
@@ -111,23 +190,36 @@ const TimelineScreen = ({ route, navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             {renderSelected()}
-            {route.params.page == 0 ? (
-                <View style={styles.container}>
+            <View style={styles.container}>
+                {route.params.page == 0 ? (
                     <TouchableOpacity
                         style={{ alignSelf: "flex-end" }}
-                        // navigate to scheduler
+                        //  let the selected day same by passing selectedDay state to schedule.js
                         onPress={() => {
                             navigation.navigate("Page2-2", {
                                 name: `編輯 ${route.params.name}`,
                                 page: 1,
+                                data: data,
+                                initDay: selectedDay,
                             });
                         }}
                     >
                         <Text>編輯</Text>
                     </TouchableOpacity>
+                ) : (
+                    <Text>Trip Log head banner</Text>
+                )}
+                <DaySelector
+                    dayCount={data.dayCount}
+                    onPress={daySelectorOnPress}
+                    startDate={data.startDate}
+                    setDay={route.params.initDay}
+                />
+                {/* if selected day has data  */}
+                {showData.length !== 0 ? (
                     <Timeline
                         style={styles.list}
-                        data={data}
+                        data={showData}
                         circleSize={30}
                         dotSize={14}
                         circleColor="rgb(45,156,219)"
@@ -146,37 +238,15 @@ const TimelineScreen = ({ route, navigation }) => {
                         }}
                         innerCircle={"dot"}
                         onEventPress={onEventPress}
-                    />
-                </View>
-            ) : (
-                <View style={styles.container}>
-                    {/* TripLog head banner... or something */}
-                    <Text>TripLog head banner</Text>
-                    <Timeline
-                        style={styles.list}
-                        data={data}
-                        circleSize={30}
-                        dotSize={14}
-                        circleColor="rgb(45,156,219)"
-                        lineColor="rgb(45,156,219)"
-                        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-                        timeStyle={{
-                            textAlign: "center",
-                            backgroundColor: "#ff9797",
-                            color: "white",
-                            padding: 5,
-                            borderRadius: 13,
-                        }}
-                        descriptionStyle={{ color: "gray" }}
-                        options={{
-                            style: { paddingTop: 5 },
-                        }}
-                        innerCircle={"dot"}
-                        onEventPress={onEventPress}
+                        renderTime={renderTime}
                         renderDetail={renderDetail}
                     />
-                </View>
-            )}
+                ) : (
+                    <View style={{ alignSelf: "center" }}>
+                        <Text>add some schedule!!</Text>
+                    </View>
+                )}
+            </View>
         </View>
     );
 };

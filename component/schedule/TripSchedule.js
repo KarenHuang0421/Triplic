@@ -16,6 +16,7 @@ import React from "react";
 import styleConstructor from "./style";
 
 import DayView from "./DayView";
+import DaySelector from "../DaySelector";
 
 var lineHeight = 100;
 
@@ -31,22 +32,22 @@ export default class TripSchedule extends React.Component {
             (end - start) * lineHeight
         );
 
-        var flatListData = [];
-        for (var x = 1; x <= this.props.size; x++) {
-            flatListData.push({
-                id: String(x),
-                day: "Day" + String(x),
-                date: moment(this.props.startDate, "YYYY/MM/DD")
-                    .add(x - 1, "days")
-                    .format("MM/DD"),
-            });
-        }
+        // var flatListData = [];
+        // for (var x = 1; x <= this.props.size; x++) {
+        //     flatListData.push({
+        //         id: String(x),
+        //         day: "Day" + String(x),
+        //         date: moment(this.props.startDate, "YYYY/MM/DD")
+        //             .add(x - 1, "days")
+        //             .format("MM/DD"),
+        //     });
+        // }
 
         this.state = {
-            index: 0,
+            index: this.props.initDay - 1,
             lastDayCount: this.props.size,
             startDate: this.props.startDate,
-            flatListData: flatListData,
+            // flatListData: flatListData,
         };
     }
 
@@ -63,39 +64,43 @@ export default class TripSchedule extends React.Component {
             return {
                 ...prevState,
                 lastDayCount: nextProps.size,
-                flatListData: [
-                    ...prevState.flatListData,
-                    {
-                        id: String(nextProps.size),
-                        day: "Day" + String(nextProps.size),
-                        date: moment(prevState.startDate, "YYYY/MM/DD")
-                            .add(nextProps.size - 1, "days")
-                            .format("MM/DD"),
-                    },
-                ],
+                // flatListData: [
+                //     ...prevState.flatListData,
+                //     {
+                //         id: String(nextProps.size),
+                //         day: "Day" + String(nextProps.size),
+                //         date: moment(prevState.startDate, "YYYY/MM/DD")
+                //             .add(nextProps.size - 1, "days")
+                //             .format("MM/DD"),
+                //     },
+                // ],
             };
         }
         // if the start date change
         // warning!! this unit has not been test!!
         if (nextProps.startDate !== prevState.startDate) {
-            var newflatListData = [];
-            for (var x = 1; x <= this.props.size; x++) {
-                newflatListData.push({
-                    id: String(x),
-                    day: "Day" + String(x),
-                    date: moment(nextProps.startDate, "YYYY/MM/DD")
-                        .add(x - 1, "days")
-                        .format("MM/DD"),
-                });
-            }
+            // var newflatListData = [];
+            // for (var x = 1; x <= this.props.size; x++) {
+            //     newflatListData.push({
+            //         id: String(x),
+            //         day: "Day" + String(x),
+            //         date: moment(nextProps.startDate, "YYYY/MM/DD")
+            //             .add(x - 1, "days")
+            //             .format("MM/DD"),
+            //     });
+            // }
             return {
                 ...prevState,
                 startDate: nextProps.startDate,
-                flatListData: newflatListData,
+                // flatListData: newflatListData,
             };
         }
         return null;
     }
+
+    static defaultProps = {
+        initDay: 1,
+    };
 
     componentWillUnmount() {
         if (this.props.onRef) {
@@ -169,44 +174,44 @@ export default class TripSchedule extends React.Component {
         this._goToPage(day - 1);
     }
 
-    // flatList on the top to select day
-    _renderFlatListItem = ({ item }) => {
-        // clicked item: first color, unclicked item: second color
-        const backgroundColor =
-            item.id === String(this.state.index + 1) ? "#6e3b6e" : "#f9c2ff";
-        const color =
-            item.id === String(this.state.index + 1) ? "white" : "black";
+    // wait for delete
+    // _renderFlatListItem = ({ item }) => {
+    //     // clicked item: first color, unclicked item: second color
+    //     const backgroundColor =
+    //         item.id === String(this.state.index + 1) ? "#6e3b6e" : "#f9c2ff";
+    //     const color =
+    //         item.id === String(this.state.index + 1) ? "white" : "black";
 
-        const FlatListItem = ({
-            item,
-            onPress,
-            backgroundColor,
-            textColor,
-        }) => (
-            <TouchableOpacity
-                onPress={onPress}
-                style={[styles.flatListItem, backgroundColor]}
-            >
-                <Text style={[styles.flatListText, textColor]}>{item.day}</Text>
-                <Text style={[styles.flatListText, textColor]}>
-                    {item.date}
-                </Text>
-            </TouchableOpacity>
-        );
+    //     const FlatListItem = ({
+    //         item,
+    //         onPress,
+    //         backgroundColor,
+    //         textColor,
+    //     }) => (
+    //         <TouchableOpacity
+    //             onPress={onPress}
+    //             style={[styles.flatListItem, backgroundColor]}
+    //         >
+    //             <Text style={[styles.flatListText, textColor]}>{item.day}</Text>
+    //             <Text style={[styles.flatListText, textColor]}>
+    //                 {item.date}
+    //             </Text>
+    //         </TouchableOpacity>
+    //     );
 
-        return (
-            <FlatListItem
-                item={item}
-                onPress={() => this._goToDay(item.id)}
-                backgroundColor={{ backgroundColor }}
-                textColor={{ color }}
-            />
-        );
-    };
+    //     return (
+    //         <FlatListItem
+    //             item={item}
+    //             onPress={() => this._goToDay(item.id)}
+    //             backgroundColor={{ backgroundColor }}
+    //             textColor={{ color }}
+    //         />
+    //     );
+    // };
     render() {
         return (
             <View style={[this.styles.container, { width: this.props.width }]}>
-                <View
+                {/* <View
                     style={{
                         height: 70,
                         marginTop: 20,
@@ -222,7 +227,6 @@ export default class TripSchedule extends React.Component {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                     />
-                    {/* add day button  */}
                     <Button
                         title={"add day"}
                         onPress={() => {
@@ -230,14 +234,26 @@ export default class TripSchedule extends React.Component {
                             this.props.addOneDay();
                         }}
                     />
-                </View>
+                </View> */}
+                <DaySelector
+                    dayCount={this.state.lastDayCount}
+                    onPress={(id) => {
+                        this.props.lastSelectedDay(id);
+                        this._goToDay(id);
+                    }}
+                    startDate={this.state.startDate}
+                    addDay={() => {
+                        this.props.addOneDay();
+                    }}
+                    initDay={this.state.index + 1}
+                />
                 <VirtualizedList
                     ref={(ref) => {
                         this.calendar = ref;
                     }}
                     windowSize={2}
                     initialNumToRender={2}
-                    initialScrollIndex={0}
+                    initialScrollIndex={this.state.index}
                     data={this.props.events}
                     getItemCount={() => this.props.size}
                     getItem={this._getItem.bind(this)}
@@ -254,16 +270,16 @@ export default class TripSchedule extends React.Component {
         );
     }
 }
-const styles = StyleSheet.create({
-    flatListItem: {
-        backgroundColor: "#f9c2ff",
-        padding: 5,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        borderRadius: 15,
-        alignItems: "center",
-    },
-    flatListText: {
-        fontSize: 16,
-    },
-});
+// const styles = StyleSheet.create({
+//     flatListItem: {
+//         backgroundColor: "#f9c2ff",
+//         padding: 5,
+//         marginVertical: 8,
+//         marginHorizontal: 16,
+//         borderRadius: 15,
+//         alignItems: "center",
+//     },
+//     flatListText: {
+//         fontSize: 16,
+//     },
+// });
