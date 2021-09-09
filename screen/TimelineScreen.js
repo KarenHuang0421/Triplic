@@ -196,7 +196,7 @@ const TimelineScreen = ({ route, navigation }) => {
                         style={{ alignSelf: "flex-end" }}
                         //  let the selected day same by passing selectedDay state to schedule.js
                         onPress={() => {
-                            navigation.navigate("Page2-2", {
+                            navigation.navigate("Schedule", {
                                 name: `編輯 ${route.params.name}`,
                                 page: 1,
                                 data: data,

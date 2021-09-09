@@ -40,7 +40,7 @@ const Profile = () => {
                         removeValue("localKey");
                     }}
                 />
-                <Text>版本號v1.0.0</Text>
+                <Text>版本號v0.1.0</Text>
             </Column>
         </Column>
     );
