@@ -12,6 +12,7 @@ import Loading from "./screen/Loading";
 import Home from "./screen/Home";
 import MyTrips from "./screen/MyTrips";
 import Profile from "./screen/Profile";
+import Trip from "./screen/Trip";
 import TimelineView from "./screen/TimelineScreen";
 import PlacesGroup from "./screen/PlacesGroup";
 import Place from "./screen/Place";
@@ -57,6 +58,11 @@ export default function App() {
                         },
                         style: styles.tabBarStyle,
                     })}
+                />
+                <Stack.Screen
+                    name="Trip"
+                    component={Trip}
+                    options={({ route }) => ({ title: route.params.name })}
                 />
                 <Stack.Screen
                     name="TimelineScreen"

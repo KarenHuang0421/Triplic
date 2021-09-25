@@ -15,6 +15,7 @@ import FlatListSlider from "../component/imageFlatList/FlatListSlider";
 import ChildItem from "../component/imageFlatList/ChildItem";
 import moment from "moment";
 import DaySelector from "../component/DaySelector";
+import { StyleText } from "../component/components";
 
 const TimelineScreen = ({ route, navigation }) => {
     const imageData = [
@@ -131,7 +132,7 @@ const TimelineScreen = ({ route, navigation }) => {
 
     const renderTime = (rowData, sectionID, rowID) => {
         return (
-            <View style={{ alignItems: "flex-end" }}>
+            <View style={{ alignItems: "flex-end"}}>
                 <View
                     style={{
                         minWidth: 52,
@@ -191,7 +192,7 @@ const TimelineScreen = ({ route, navigation }) => {
         <View style={{ flex: 1 }}>
             {renderSelected()}
             <View style={styles.container}>
-                {route.params.page == 0 ? (
+                {route.params.page == 0 && (
                     <TouchableOpacity
                         style={{ alignSelf: "flex-end" }}
                         //  let the selected day same by passing selectedDay state to schedule.js
@@ -206,8 +207,6 @@ const TimelineScreen = ({ route, navigation }) => {
                     >
                         <Text>編輯</Text>
                     </TouchableOpacity>
-                ) : (
-                    <Text>Trip Log head banner</Text>
                 )}
                 <DaySelector
                     dayCount={data.dayCount}
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 1,
-        marginTop: 20,
+        marginTop: 20
     },
     title: {
         fontSize: 16,

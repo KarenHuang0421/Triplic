@@ -38,10 +38,10 @@ const PlacesGroup = ({ navigation, onPress }) => {
                 }
             >
                 <Card>
-                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Title style={{textAlign:'left'}}>{item.name}</Card.Title>
                     <Card.Divider />
                     <Column>
-                        <StyleText>content</StyleText>
+                        <StyleText>address...</StyleText>
                     </Column>
                 </Card>
             </TouchableOpacity>

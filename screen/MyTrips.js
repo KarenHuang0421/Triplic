@@ -10,21 +10,21 @@ const ToolBar = ({ onPress }) => {
             <TouchableOpacity
                 style={{width: '50%'}}
                 onPress={onPress}>
-                <Column 
+                <StyleText 
                     flex={1} 
-                    h="center" 
-                    style={styles.segmented}>tab 1
-                </Column>
+                    style={styles.segmented}>
+                        tab 1
+                </StyleText>
             </TouchableOpacity>
-            <Column style={{width:1, height:'100%', background:'#2089dc' }}  />
+            <Column style={{width:1, height:'100%', backgroundColor:'#2089dc' }}  />
             <TouchableOpacity
                 style={{width: '50%'}}
                 onPress={onPress}>
-                <Column 
+                <StyleText 
                     flex={1} 
-                    h="center" 
-                    style={styles.segmented}>tab 2
-                </Column>
+                    style={styles.segmented}>
+                    tab 2
+                </StyleText>
             </TouchableOpacity>
         </Row>
     )
@@ -32,7 +32,7 @@ const ToolBar = ({ onPress }) => {
 
 const Content = ({ add, data, onPress, type }) => {
     return(
-        <Column h="center" v="center">
+        <Column h="center" v="center" style={{width: '100%'}}>
             {data.map((item, key) => (
                 <TouchableOpacity
                     key={key}
@@ -86,7 +86,7 @@ const MyTrips = () => {
     }, [tab])
 
     return (
-        <Column>
+        <Column h="center">
             <ToolBar onPress={() => setTab(!tab)} />
             <Content 
                 type={tab}
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     },
     segmented: {
       color: '#2089dc',
+      textAlign: 'center',
       paddingVertical: 5
     }
 });

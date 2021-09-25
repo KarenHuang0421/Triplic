@@ -53,7 +53,7 @@ const Home = ({ navigation }) => {
                     horizontal={true}
                     renderItem={({item}) => 
                         <Card data={item} onPress={() => {
-                            navigation.navigate("TimelineScreen", {
+                            navigation.navigate("Trip", {
                                 name: item.name,
                                 page: 1,
                             })
